@@ -28,12 +28,14 @@ class Student extends Model
 
     public function subjects(): BelongsToMany
     {
-        return $this->BelongsToMany(Subject::class, "inscriptions");
+        return $this->BelongsToMany(Subject::class, "inscriptions")
+                    ->withTimestamps();
     }
 
     public function evaluations(): BelongsToMany
     {
         return $this->BelongsToMany(Evaluation::class, "records")
-                    ->withPivot("note");
+                    ->withPivot("note")
+                    ->withTimestamps();
     }
 }
