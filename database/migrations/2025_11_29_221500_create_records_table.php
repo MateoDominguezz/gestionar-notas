@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId("student_id")
                   ->constrained();
             $table->foreignId("student_evaluation")
-                  ->constrained();
+                  ->constrained("evaluations");
             // Atributos
             $table->float("note", 3,1);
 
