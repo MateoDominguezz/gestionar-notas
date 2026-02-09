@@ -13,7 +13,8 @@ class StudentController extends Controller
      */
     public function index()
     {
-        //
+        $alumnos = Student::all()->groupBy("id");
+        return view("alumnos.indexAlumnos", compact("alumnos"));
     }
 
     /**

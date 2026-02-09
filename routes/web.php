@@ -1,13 +1,15 @@
 <?php
 
+use App\Http\Controllers\IndexController;
+use App\Http\Controllers\StudentController;
 use App\Http\Controllers\SubjectController;
-use App\Models\Student;
-use App\Models\Subject;
 use Illuminate\Support\Facades\Route;
 
-Route::view("/", "inicio")->name("index");
-Route::resource("/materias", SubjectController::class);
-Route::post('/materias/{materia}/alumno', [SubjectController::class, 'storeStudent'])
-    ->name('materias.student.store');
+// Inicio
+Route::get("/", [IndexController::class, "index"])->name("index");
 
-//Route::resource("/materia", [SubjectController::class]);
+// Materias
+Route::get("/materias", [SubjectController::class, "index"])->name("index.materias");
+
+//Alumnos
+Route::get("/alumnos", [StudentController::class, "index"])->name("index.alumnos");

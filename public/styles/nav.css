@@ -1,0 +1,26 @@
+/* Efecto de hover en links */
+.nav-custom-link {
+    font-weight: 500;
+    color: #555 ;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.nav-custom-link:hover, .nav-custom-link.active {
+    color: #0d6efd !important;
+}
+
+.nav-custom-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: #0d6efd;
+    transition: width 0.3s ease;
+}
+
+.nav-custom-link:hover::after {
+    width: 100%;
+}
