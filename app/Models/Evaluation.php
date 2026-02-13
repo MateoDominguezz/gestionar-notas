@@ -18,7 +18,7 @@ class Evaluation extends Model
 
     public function records(): HasMany
     {
-        return $this->hasMany(Record::class);
+        return $this->hasMany(Record::class, "student_evaluation");
     }
 
     public function subject(): BelongsTo

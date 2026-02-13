@@ -18,7 +18,7 @@ class Subject extends Model
 
     public function evaluations(): HasMany
     {
-        return $this->hasMany(Evaluation::class);
+        return $this->hasMany(Evaluation::class, "subject_id");
     }
 
     public function inscriptions(): HasMany

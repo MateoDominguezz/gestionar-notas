@@ -11,7 +11,7 @@ class StoreStudentRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,17 @@ class StoreStudentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            "name" => "required|string|min:3|max:30"
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            "name.required" => "Ingrese el nombre",
+            "name.string" => "Ingrese letras",
+            "name.min" => "El nombre es minimo de 3 caracteres",
+            "name.max" => "El nombre es maximo de 30 caracteres"
         ];
     }
 }

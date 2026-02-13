@@ -13,7 +13,7 @@ class StudentController extends Controller
      */
     public function index()
     {
-        $alumnos = Student::all()->groupBy("id");
+        $alumnos = Student::with(["inscriptions","records","evaluations", "subjects"])->get();
         return view("alumnos.indexAlumnos", compact("alumnos"));
     }
 
@@ -22,7 +22,7 @@ class StudentController extends Controller
      */
     public function create()
     {
-        //
+        return view("alumnos.createAlumno");
     }
 
     /**
@@ -30,31 +30,24 @@ class StudentController extends Controller
      */
     public function store(StoreStudentRequest $request)
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Student $student)
-    {
-        //
+        Student::create($request->validated());
+        return redirect()->route("index.alumnos")->with("success", "Se pudo insertar el alumno correctamente");
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Student $student)
+    public function edit($id)
     {
-        //
+        $alumno = Student::find($id);
+        return view("alumnos.editAlumno", compact("alumno"));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateStudentRequest $request, Student $student)
+    public function update(StoreStudentRequest $request, Student $student)
     {
-        //
     }
 
     /**

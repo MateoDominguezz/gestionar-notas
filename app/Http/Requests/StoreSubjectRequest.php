@@ -23,8 +23,7 @@ class StoreSubjectRequest extends FormRequest
     {
         return [
             "name" => "required|string|max:255",
-            "acedemic_year" => "year|required",
-            'students' => 'array|exists:students,id',
+            "academic_year" => "required|integer|min:2026",
         ];
     }
 

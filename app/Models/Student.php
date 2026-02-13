@@ -18,7 +18,7 @@ class Student extends Model
 
     public function inscriptions(): HasMany
     {
-        return $this->hasMany(Inscription::class);
+        return $this->hasMany(Inscription::class, "student_id");
     }
 
     public function records(): HasMany
@@ -34,8 +34,13 @@ class Student extends Model
 
     public function evaluations(): BelongsToMany
     {
-        return $this->BelongsToMany(Evaluation::class, "records")
+        return $this->BelongsToMany(Evaluation::class, "records", "student_id", "student_evaluation")
                     ->withPivot("note")
                     ->withTimestamps();
+    }
+
+    public function promedio()
+    {
+        return $this->records()->avg("note") ?? 0;
     }
 }
