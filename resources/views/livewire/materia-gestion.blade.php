@@ -81,7 +81,7 @@
                         @foreach($alumnos as $alumno)
                             <tr wire:key="alumno-{{ $alumno->id }}">
                                 <td class="ps-4 text-start fw-medium text-secondary student-cell">
-                                    {{-- Botón de eliminar (Posicionado absoluto) --}}
+                                    <!-- Boton de eliminacion Alumno -->
                                     <button 
                                         type="button" 
                                         class="btn btn-sm btn-link text-danger p-0 btn-delete-student"
@@ -89,11 +89,11 @@
                                         onclick="confirm('¿Quitar a {{ $alumno->name }}?') || event.stopImmediatePropagation()">
                                         <i class="bi bi-x-circle-fill"></i>
                                     </button>
-                                
-                                    {{-- Nombre del alumno --}}
+                                    <!-- Nombre del alumno-->
                                     <span class="student-name">{{ $alumno->name }}</span>
                                 </td>
                             
+                                <!-- Evaluaciones -->
                                 @foreach($evaluaciones as $eval)
                                     <td wire:key="nota-{{ $alumno->id }}-{{ $eval->id }}">
                                         @php
