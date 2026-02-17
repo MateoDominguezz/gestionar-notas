@@ -9,6 +9,7 @@ use App\Models\Student;
 use App\Models\Subject;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Livewire\Attributes\Computed;
 
 class MateriaGestion extends Component
 {
@@ -20,6 +21,7 @@ class MateriaGestion extends Component
     public $nombreAlumno;
     public $nombreEvaluacion;
     public $alumnoPromedio;
+    public $buscador = "";
     protected $paginationTheme = "bootstrap";
 
 
@@ -50,6 +52,20 @@ class MateriaGestion extends Component
         $this->reset("nombreEvaluacion");
     }
 
+    public function updatingBuscador()
+    {
+        $this->resetPage();
+    }    
+
+    // Funcion para buscar alumno
+    public function getAlumno()
+    {
+        return Student::with("subjects")
+            ->where("name", "like", "%" . $this->buscador ."%")
+            ->has("subjects")
+            ->paginate(10);
+    }
+
     // Funcion para guardar o editar notas
     public function guardarNotas($id_alumno, $id_evaluacion, $valor_nota)
     {
@@ -64,6 +80,27 @@ class MateriaGestion extends Component
 
         $this->materia->load("evaluations", "students.records");
     }
+
+    // Funcion para ver todos los alumnos inscriptos
+    public function alumnosInscriptos()
+    {
+        $idMateria = $this->materia->id;
+        $evaluacionIds = Evaluation::where("subject_id", $idMateria)->pluck("id");
+
+        return Student::whereHas("inscriptions", function($q) use ($idMateria) {
+                $q->where("subject_id", $idMateria);
+            })
+            ->where("name", "like", "%" . $this->buscador . "%")
+            ->with(["records" => function($q) use ($evaluacionIds) {
+                $q->whereIn("student_evaluation", $evaluacionIds);
+            }])
+            ->paginate(10);
+    }
+
+    public function evaluaciones()
+    {
+        return $this->materia->evaluations;
+    }    
 
     // Funcion para el promedio del alumno
     public function promedioAlumno($alumnoId)
@@ -98,29 +135,22 @@ class MateriaGestion extends Component
           ->delete();
     }
 
+    // Funcion para el promedio general
+    public function promedioGeneral()
+    {
+        $evaluacionIds = $this->materia->evaluations->pluck("id");
+        $idsAlumnosMateria = Inscription::where("subject_id", $this->materia->id)->pluck("student_id");
+
+        return Record::whereIn("student_evaluation", $evaluacionIds)
+                     ->whereIn("student_id", $idsAlumnosMateria)
+                     ->avg("note");
+    }    
+
     public function render()
     {
-    $evaluaciones = $this->materia->evaluations; 
-    $evaluacionIds = $evaluaciones->pluck("id");
-
-    $idsAlumnosMateria = Inscription::where("subject_id", $this->materia->id)
-                                    ->pluck("student_id");    
-
-    $alumnosInscriptos = Student::whereHas("inscriptions", function($e) {
-            $e->where("subject_id", $this->materia->id);
-        })
-        ->with(["records" => function($e) use ($evaluacionIds) {
-            $e->whereIn("student_evaluation", $evaluacionIds);
-        }])
-        ->paginate(10);
-
-    $promedioGeneral = Record::whereIn("student_evaluation", $evaluacionIds)
-                             ->whereIn("student_id", $idsAlumnosMateria)
-                             ->avg("note");
-
     return view('livewire.materia-gestion', [
-        "alumnos" => $alumnosInscriptos,
-        "evaluaciones" => $evaluaciones,
-        "promedioGeneral" => $promedioGeneral
+        "alumnos" => $this->alumnosInscriptos(),
+        "evaluaciones" => $this->evaluaciones(),
+        "promedioGeneral" => $this->promedioGeneral()
     ]);
     }}

@@ -44,6 +44,38 @@
             </div>
         </div>
     </div>
+    
+    <!-- Buscador -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm" style="border-radius: 10px;">
+                <div class="card-body">
+                    <label class="form-label fw-bold text-primary small mb-2">
+                        <i class="bi bi-search me-1"></i> BUSCADOR DE ALUMNOS
+                    </label>
+                    
+                    <div class="input-group">
+                        <input type="text" 
+                               class="form-control bg-light border-0" 
+                               placeholder="Ingresa el nombre del alumno para ver en la tabla" 
+                               wire:model.live.debounce.300ms="buscador"
+                               style="padding: 12px;">
+                        
+                        @if($buscador)
+                            <button class="btn btn-light border-0 text-danger" type="button" wire:click="$set('buscador', '')">
+                                <i class="bi bi-x-circle-fill"></i> Limpiar
+                            </button>
+                        @endif
+                    </div>
+                
+                    <div wire:loading wire:target="buscador" class="mt-2">
+                        <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+                        <small class="text-muted ms-1">Buscando...</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="card shadow-sm border-0">
         <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
