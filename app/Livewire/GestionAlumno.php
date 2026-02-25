@@ -53,9 +53,10 @@ class GestionAlumno extends Component
     // Funcion para buscar Alumnos
     public function mostrarAlumnos()
     {
-        return Student::with("subjects")
+        return Student::query()
             ->where("name", "like", "%" . $this->buscador ."%")
-            ->has("subjects")
+            ->withCount("subjects")
+            ->orderBy("name","asc")
             ->paginate(10);
     }
 
@@ -69,7 +70,7 @@ class GestionAlumno extends Component
     {
         return view('livewire.gestion-alumno', [
             "alumnos" => $this->mostrarAlumnos(),
-            "materias" =>Subject::all()
+            "materias" =>Subject::OrderBy("name", "asc")->get()
         ]);
     }
 }

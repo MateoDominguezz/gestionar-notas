@@ -6,7 +6,7 @@
             <div class="col-md-8">
                 <div class="mb-3">
                     <a href="{{ route('index.materias') }}" class="btn btn-outline-secondary btn-sm">
-                        <i class="bi bi-arrow-left"></i> Volver al listado
+                        <i class="bi bi-arrow-left"></i> Volver
                     </a>
                 </div>
             

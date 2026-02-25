@@ -11,9 +11,9 @@ class IndexController extends Controller
 {
     public function index()
     {
-        $alumnos = Student::all()->count("id");
-        $materias = Subject::all()->count("id");
-        $notas = Record::all()->avg("note");
+        $alumnos = Student::count();
+        $materias = Subject::count();
+        $notas = Record::whereHas("evaluation.subject")->avg("note") ?? 0;
         return view("index", compact(["materias", "alumnos", "notas"]));
     }
 }

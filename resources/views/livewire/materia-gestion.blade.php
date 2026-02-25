@@ -10,12 +10,23 @@
         </div>
         
     
-        <span class="badge bg-primary rounded-pill px-3 py-2">
-            {{ now()->format('d/m/Y') }}
-        </span>
+        <div class="d-flex align-items-center gap-2">
+            <span class="badge bg-primary rounded-pill px-3 py-2">
+                {{ now()->format('d/m/Y') }}
+            </span>
+
+            <button type="button" 
+                class="btn btn-outline-danger btn-sm rounded-pill px-3"
+                wire:click="eliminarMateria({{ $materia->id }})"
+                onclick="confirm('¿Estás seguro de eliminar esta materia? Se perderán todos los datos de alumnos y notas asociados.') || event.stopImmediatePropagation()">
+                <i class="bi bi-trash"></i> Eliminar
+            </button>
+        </div>
+
     </div>
 
     <div class="row g-3 mb-5">
+        <!-- Crear Alumnos en la materia-->
         <div class="col-md-6">
             <div class="card shadow-sm border-0">
                 <div class="card-body bg-light rounded">
@@ -30,6 +41,7 @@
             </div>
         </div>
 
+        <!-- Crear evaluaciones en la materia-->
         <div class="col-md-6">
             <div class="card shadow-sm border-0">
                 <div class="card-body bg-light rounded">
@@ -45,7 +57,7 @@
         </div>
     </div>
     
-    <!-- Buscador -->
+    <!-- Buscador de Alumnos-->
     <div class="row mb-4">
         <div class="col-12">
             <div class="card border-0 shadow-sm" style="border-radius: 10px;">
@@ -57,7 +69,7 @@
                     <div class="input-group">
                         <input type="text" 
                                class="form-control bg-light border-0" 
-                               placeholder="Ingresa el nombre del alumno para ver en la tabla" 
+                               placeholder="Ingresa el nombre del alumno" 
                                wire:model.live.debounce.300ms="buscador"
                                style="padding: 12px;">
                         
@@ -88,7 +100,7 @@
                     <!-- Encabezado de la tabla -->
                     <thead class="table-light">
                         <tr>
-                            <th class="ps-4 text-start" style="width: 250px;">Nombre del Alumno</th>
+                            <th class="ps-4 text-start bg-light" style="width: 250px; position: sticky; left: 0; z-index: 10;">Nombre del Alumno</th>
                             @foreach($evaluaciones as $eval)
                                 <th class="text-center eval-header">
                                     <!-- Boton para eliminar evaluacion-->
@@ -110,7 +122,7 @@
                     </thead>
                     <!-- Cuerpo de la tabla -->
                     <tbody>
-                        @foreach($alumnos as $alumno)
+                        @forelse($alumnos as $alumno)
                             <tr wire:key="alumno-{{ $alumno->id }}">
                                 <td class="ps-4 text-start fw-medium text-secondary student-cell">
                                     <!-- Boton de eliminacion Alumno -->
@@ -134,6 +146,7 @@
                                         <div class="d-flex justify-content-center">
                                             <input type="number" 
                                                 class="form-control text-center shadow-sm"
+                                                style="width: 60px; margin: 0 auto;"
                                                 value="{{ $record->note ?? '' }}" 
                                                 wire:change="guardarNotas({{ $alumno->id }}, {{ $eval->id }}, $event.target.value)"
                                                 style="width: 70px; border-radius: 8px;"
@@ -146,7 +159,14 @@
                                     {{ $alumno->records->count() > 0 ? number_format($alumno->records->avg('note'), 2) : '-' }}
                                 </td>
                             </tr>
-                        @endforeach
+                                @empty
+                                    <tr>
+                                        <td colspan="100" class="text-center py-4 text-muted">
+                                            <i class="bi bi-person-x d-block mb-2" style="font-size: 2rem;"></i>
+                                            No hay alumnos inscriptos en esta materia todavía.
+                                        </td>
+                                    </tr>    
+                        @endforelse
                     </tbody>
 
                     <!--Footer de la tabla-->

@@ -146,6 +146,20 @@ class MateriaGestion extends Component
                      ->avg("note");
     }    
 
+    // Funcion para eliminar Materia
+    public function eliminarMateria($id)
+    {
+        $materia = Subject::findOrFail($id);
+        Inscription::where("subject_id", $id)->delete();
+        Evaluation::where("subject_id", $id)->delete();
+            
+        $materia->delete();
+
+        return redirect()->route("index.materias")->with("message", "Materia eliminada correctamente");
+
+        
+    }
+
     public function render()
     {
     return view('livewire.materia-gestion', [
